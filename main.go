@@ -10,7 +10,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type Todo struct {
+type Tweet struct {
 	ID    string `json:"id"`
 	Title string `json:"title"`
 }
@@ -33,7 +33,7 @@ func main() {
 		panic("failed to connect database")
 	}
 
-	db.AutoMigrate(&Todo{})
+	db.AutoMigrate(&Tweet{})
 
 	router := gin.Default()
 
@@ -43,17 +43,17 @@ func main() {
 		})
 	})
 
-	router.GET("/todos", func(c *gin.Context) {
-		var todos []Todo
-		db.Find(&todos)
-		c.JSON(200, todos)
+	router.GET("/tweets", func(c *gin.Context) {
+		var tweets []Tweet
+		db.Find(&tweets)
+		c.JSON(200, tweets)
 	})
 
-	router.POST("/todos", func(c *gin.Context) {
-		var todo Todo
-		c.BindJSON(&todo)
-		db.Create(&todo)
-		c.JSON(200, todo)
+	router.POST("/tweets", func(c *gin.Context) {
+		var tweet Tweet
+		c.BindJSON(&tweet)
+		db.Create(&tweet)
+		c.JSON(200, tweet)
 	})
 
 	router.Run()
