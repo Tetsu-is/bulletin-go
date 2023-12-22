@@ -4,6 +4,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
@@ -36,6 +37,26 @@ func main() {
 	db.AutoMigrate(&Tweet{})
 
 	router := gin.Default()
+
+	//cors setting from middleware
+	router.Use(cors.New(cors.Config{
+
+		AllowOrigins: []string{
+			"http://localhost:3000",
+		},
+
+		AllowMethods: []string{
+			"POST",
+			"GET",
+			"OPTIONS",
+			"PUT",
+			"DELETE",
+		},
+
+		AllowHeaders: []string{
+			"Content-Type",
+		},
+	}))
 
 	router.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{
