@@ -71,8 +71,14 @@ func main() {
 
 	//receive json -> {offset: 0, limit: 10}
 	router.GET("/tweets", func(c *gin.Context) {
+		var req struct {
+			Offset int `json:"offset"`
+			Limit  int `json:"limit"`
+		}
+		c.BindJSON(&req)
+
 		var tweets []Tweet
-		db.Offset(0).Limit(10).Find(&tweets)
+		db.Offset(req.Offset).Limit(req.Limit).Find(&tweets)
 		c.JSON(200, tweets)
 	})
 
