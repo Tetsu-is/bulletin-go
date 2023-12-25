@@ -12,7 +12,7 @@ import (
 )
 
 type Tweet struct {
-	ID    string `json:"id"`
+	Id    string `json:"id" gorm:"primaryKey"`
 	Title string `json:"title"`
 }
 
@@ -58,15 +58,21 @@ func main() {
 		},
 	}))
 
+	//rewite this with for loop
+	for i := 1; i <= 10; i++ {
+		db.Create(&Tweet{Id: string(i), Title: "Hello World" + string(i)})
+	}
+
 	router.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"message": "pong",
 		})
 	})
 
+	//receive json -> {offset: 0, limit: 10}
 	router.GET("/tweets", func(c *gin.Context) {
 		var tweets []Tweet
-		db.Find(&tweets)
+		db.Offset(0).Limit(10).Find(&tweets)
 		c.JSON(200, tweets)
 	})
 
